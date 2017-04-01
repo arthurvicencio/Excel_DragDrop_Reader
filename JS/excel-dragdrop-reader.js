@@ -6,6 +6,7 @@
     var $tableHeader     = $('#tableHeader').html('');
     var $tableBody       = $('#tableBody').html('');
     var $tableTemplate   = $('#table').html('');
+    var $tableCellHeaders = genCellHeadersArray('a', 'z');
     var $form            = $('#form');
     var $saveButton      = $('#save');
 
@@ -77,6 +78,14 @@
         });
     }
 
+    function genCellHeadersArray(firstChar, limitChar) {
+    var letters = [], i = firstChar.charCodeAt(0), j = limitChar.charCodeAt(0);
+    for (; i <= j; ++i) {
+        letters.push(String.fromCharCode(i));
+    }
+    return letters;
+}
+
     function writeResponse(response) {
         var responseJson = JSON.parse(response);
         var loopEnd = responseJson.length;
@@ -98,28 +107,42 @@
 
 
     function makeHeader(data) {
-        var $header = $tableHeader.clone();
-        var loopEnd = data.length;
-        for (var i = 0; i < loopEnd; i++) {
+        var $theader = $tableHeader.clone();
+        //var loopEnd = data.length;
+        for (var i = 0; i < $tableCellHeaders.length; i++) {
+            if(i == 0){
+                var $cell = $tableHeaderCell.clone();
+                $cell.html('&nbsp;');
+                $theader.append($cell);
+                console.log(data[i]);
+            }
+
             var $cell = $tableHeaderCell.clone();
-            $cell.html(data[i]);
-            $header.append($cell);
+            $cell.html($tableCellHeaders[i].toUpperCase());
+            $theader.append($cell);
+            console.log(data[i]);
         }
 
-        return $header;
+        return $theader;
 
     }
 
-    function makeBody(data, rowNumber) {
-        var $header = $tableBody.clone();
-        var loopEnd = data.length;
-        for (var i = 0; i < loopEnd; i++) {
+    function makeBody(data, index) {
+        var $tbody = $tableBody.clone();
+        //var $saveBtn = $('<input type="submit" value="Save" />').html();
+        //var loopEnd = data.length;
+        for (var i = 0; i < $tableCellHeaders.length; i++) {
             var $cell = $tableBodyCell.clone();
+            
+            if(i == 0){
+                //$cell.find('span').text(index);
+                $tbody.append('<td>'+index+'</td>');
+            }
             $cell.find('input').attr('name', 'cell' + rowNumber + '[]').val(data[i]);
-            $header.append($cell);
+            $tbody.append($cell);
         }
 
-        return $header;
+        return $tbody;
     }
 
     function saveExcel() {
@@ -160,7 +183,7 @@
             if(files[i].type.indexOf('image/') === 0) {
                 output.innerHTML += '<img width="200" src="' + URL.createObjectURL(files[i]) + '" />';
             }
-            output.innerHTML += '<p>'+files[i].name+'</p>';
+            output.innerHTML += '<h4>'+files[i].name+'<h4>';
         }
     });
 
