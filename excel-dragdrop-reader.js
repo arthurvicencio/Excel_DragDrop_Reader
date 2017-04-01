@@ -14,6 +14,18 @@
       }
       callback.call(null, files);
     }
+
+    function makeAjax(data) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          document.write(this.responseText);
+        }
+      };
+      xhttp.open("POST", "readExcel.php", true);
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send("file="+data.match(/,(.*)$/)[1]);
+    }
     //Nothing special here man, more on UI handlers lang to..
     function makeDroppable(ele, callback) {
       var input = document.createElement('input');
@@ -50,10 +62,19 @@
       });
     }
     window.makeDroppable = makeDroppable;
+    window.makeAjax = makeAjax;
   })(this);
   (function(window) {
     makeDroppable(window.document.querySelector('.droppable-area'), function(files) {
-      console.log(files);
+      var reader = new FileReader();
+
+      reader.onload = function(e) {
+        makeAjax(e.target.result);
+        console.log(e.target.result);
+      };
+
+      reader.readAsDataURL(files[0]);
+
       var output = document.querySelector('.output');
       output.innerHTML = '';
       for(var i=0; i<files.length; i++) {
