@@ -1,12 +1,14 @@
 (function(window) {
 
-    /* Cache DOM Templates */
+    /* Cache DOM */
     var $tableHeaderCell = $('#tableHeader').children();
     var $tableBodyCell   = $('#tableBody').children();
     var $tableHeader     = $('#tableHeader').html('');
     var $tableBody       = $('#tableBody').html('');
     var $tableTemplate   = $('#table').html('');
     var $tableCellHeaders = genCellHeadersArray('a', 'z');
+    var $form            = $('#form');
+    var $saveButton      = $('#save');
 
     function triggerCallback(e, callback) {
         if(!callback || typeof callback !== 'function') {
@@ -24,18 +26,20 @@
         callback.call(null, files);
     }
 
-    function makeAjax(data, callback) {
+    function makeAjax(url, data, callback = null) {
         var xhttp = new XMLHttpRequest();
 
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                callback(this.responseText);
+                if (callback !== null) {                
+                    callback(this.responseText);
+                }
             }
         };
 
-        xhttp.open("POST", "readExcel.php", true);
+        xhttp.open("POST", url, true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send("file="+data.match(/,(.*)$/)[1]);
+        xhttp.send(data);
     }
     //Nothing special here man, more on UI handlers lang to..
     function makeDroppable(ele, callback) {
@@ -85,7 +89,8 @@
     function writeResponse(response) {
         var responseJson = JSON.parse(response);
         var loopEnd = responseJson.length;
-
+        $tableTemplate.html('');
+        
         for (var i = 0; i < loopEnd; i++) {
             
             if (i === 0) {
@@ -99,6 +104,7 @@
 
         $tableTemplate.show();
     }
+
 
     function makeHeader(data) {
         var $theader = $tableHeader.clone();
@@ -132,17 +138,30 @@
                 //$cell.find('span').text(index);
                 $tbody.append('<td>'+index+'</td>');
             }
-
-            $cell.find('input').val(data[i]);
+            $cell.find('input').attr('name', 'cell' + rowNumber + '[]').val(data[i]);
             $tbody.append($cell);
         }
 
         return $tbody;
     }
 
+    function saveExcel() {
+        var data = $form.serialize();
+
+        makeAjax('saveExcel.php', data, function(response) {
+            window.location.href = 'getExcel.php?file=' + response;
+        });
+
+        event.preventDefault();
+    }
+
+
     window.makeDroppable = makeDroppable;
     window.makeAjax = makeAjax;
     window.writeResponse = writeResponse;
+    window.bindEvent = function() {
+        $saveButton.click(saveExcel);
+    };
 
 })(this);
 
@@ -152,7 +171,8 @@
         var reader = new FileReader();
 
         reader.onload = function(e) {
-            makeAjax(e.target.result, writeResponse);
+            var data = 'file=' + e.target.result.match(/,(.*)$/)[1];
+            makeAjax('readExcel.php', data, writeResponse);
         };
 
         reader.readAsDataURL(files[0]);
@@ -166,4 +186,7 @@
             output.innerHTML += '<h4>'+files[i].name+'<h4>';
         }
     });
+
+    bindEvent();
+
 })(this);
