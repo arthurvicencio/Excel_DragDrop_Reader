@@ -138,7 +138,7 @@
                 //$cell.find('span').text(index);
                 $tbody.append('<td>'+index+'</td>');
             }
-            $cell.find('input').attr('name', 'cell' + rowNumber + '[]').val(data[i]);
+            $cell.find('input').attr('name', 'cell' + index + '[]').val(data[i]);
             $tbody.append($cell);
         }
 
