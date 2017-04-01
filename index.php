@@ -19,21 +19,24 @@
         </div>
         <div class='output'></div>
 
+        <br />
+        <a href="#" id="save"> Save! </a>
+        
         <!-- Start Excel Table Template -->
-
-        <table border="1" id="table" hidden>
-            <tr id="tableHeader">
-                <th></th>
-            </tr>
-            <tr id="tableBody">
-                <td>
-                    <input type="text">
-                </td>
-            </tr>
-        </table>
+        <form action="" method="post" id="form">
+            <table border="1" id="table" hidden>
+                <tr id="tableHeader">
+                    <th></th>
+                </tr>
+                <tr id="tableBody">
+                    <td>
+                        <input type="text" name="">
+                    </td>
+                </tr>
+            </table>
+        </form>
 
         <!-- End Excel Table Template -->
-        
         <!-- Import jquery 3.2 -->
         <script src='JS/jquery.3.2.min.js'></script>
         <!-- Import excel-dragdrop-reader.js  -->
