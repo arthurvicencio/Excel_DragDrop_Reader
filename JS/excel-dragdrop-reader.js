@@ -1,4 +1,12 @@
 (function(window) {
+
+    /* Cache DOM Templates */
+    var $tableHeaderCell = $('#tableHeader').children();
+    var $tableBodyCell   = $('#tableBody').children();
+    var $tableHeader     = $('#tableHeader').html('');
+    var $tableBody       = $('#tableBody').html('');
+    var $tableTemplate   = $('#table').html('');
+
     function triggerCallback(e, callback) {
         if(!callback || typeof callback !== 'function') {
             return;
@@ -15,12 +23,12 @@
         callback.call(null, files);
     }
 
-    function makeAjax(data) {
+    function makeAjax(data, callback) {
         var xhttp = new XMLHttpRequest();
 
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                document.write(this.responseText);
+                callback(this.responseText);
             }
         };
 
@@ -65,8 +73,53 @@
         });
     }
 
+    function writeResponse(response) {
+        var responseJson = JSON.parse(response);
+        var loopEnd = responseJson.length;
+
+        for (var i = 0; i < loopEnd; i++) {
+            
+            if (i === 0) {
+                var $row = makeHeader(responseJson[i]);
+            } else {
+                var $row = makeBody(responseJson[i]);
+            }
+
+            $tableTemplate.append($row);
+        }
+
+        $tableTemplate.show();
+    }
+
+    function makeHeader(data) {
+        var $header = $tableHeader.clone();
+        var loopEnd = data.length;
+        for (var i = 0; i < loopEnd; i++) {
+            var $cell = $tableHeaderCell.clone();
+            $cell.html(data[i]);
+            $header.append($cell);
+            console.log(data[i]);
+        }
+
+        return $header;
+
+    }
+
+    function makeBody(data) {
+        var $header = $tableBody.clone();
+        var loopEnd = data.length;
+        for (var i = 0; i < loopEnd; i++) {
+            var $cell = $tableBodyCell.clone();
+            $cell.find('input').val(data[i]);
+            $header.append($cell);
+        }
+
+        return $header;
+    }
+
     window.makeDroppable = makeDroppable;
     window.makeAjax = makeAjax;
+    window.writeResponse = writeResponse;
 
 })(this);
 
@@ -76,8 +129,7 @@
         var reader = new FileReader();
 
         reader.onload = function(e) {
-            makeAjax(e.target.result);
-            console.log(e.target.result);
+            makeAjax(e.target.result, writeResponse);
         };
 
         reader.readAsDataURL(files[0]);

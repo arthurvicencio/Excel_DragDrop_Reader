@@ -13,24 +13,7 @@ unlink($file);
 $sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
 
 $letters = array_keys($sheetData[1]);
-$col = count($letters);
+$values = array_map('array_values', $sheetData);
+$sheetData = array_merge([$letters], $values);
 
-$return = '<table border="1"><tr>';
-
-foreach ($letters as $letter)
-	$return.= '<td>' . $letter . '</td>';
-
-$return.= '</tr>';
-
-foreach ($sheetData as $value) {
-	$return.= '<tr>';
-	foreach ($value as $cell) {
-		$return.= '<td>' . $cell . '</td>';
-	}
-	$return.= '</tr>';
-}
-
-$return.= '</table>';
-
-
-echo $return;
+echo json_encode($sheetData);

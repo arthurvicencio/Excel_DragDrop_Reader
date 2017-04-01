@@ -18,6 +18,21 @@
             <p>Drag files here or click to upload</p>
         </div>
         <div class='output'></div>
+
+        <!-- Start Excel Table Template -->
+
+        <table border="1" id="table" hidden>
+            <tr id="tableHeader">
+                <th></th>
+            </tr>
+            <tr id="tableBody">
+                <td>
+                    <input type="text">
+                </td>
+            </tr>
+        </table>
+
+        <!-- End Excel Table Template -->
         
         <!-- Import jquery 3.2 -->
         <script src='JS/jquery.3.2.min.js'></script>
