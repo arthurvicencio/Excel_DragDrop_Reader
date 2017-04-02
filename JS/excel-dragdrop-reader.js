@@ -107,15 +107,19 @@
     function writeResponse(response) {
         var responseJson = JSON.parse(response);
         //var loopEnd = responseJson.length;
-        var loopEnd = responseJson.length < 30 ? 30 : responseJson.length; 
+        var loopEnd = responseJson.length < 30 ? 30 : responseJson.length+1; 
+        var colCount = responseJson[0].length;
         $tableTemplate.html('');
+
+        console.log(loopEnd);
+        console.log(responseJson.length);
         
         for (var i = 0; i <= loopEnd; i++) {
-            
+            var currentRsponse = typeof responseJson[i] !== 'undefined' ? responseJson[i] : colCount + 1;
             if (i === 0) {
-                var $row = makeHeader(responseJson[i]);
+                var $row = makeHeader(currentRsponse);
             } else {
-                var $row = makeBody(responseJson[i], i);
+                var $row = makeBody(currentRsponse, i);
             }
 
             $tableTemplate.append($row);
@@ -127,7 +131,7 @@
     function makeHeader(data) {
         var $theader = $tableHeader.clone();
         //var loopEnd = data.length;
-        var loopEnd = data.length < 26 ? 26 : data.length +1;
+        var loopEnd = addColumnAllowance(data);
         for (var i = 0; i < loopEnd; i++) {
             if(i == 0){
                 var $cell = $tableHeaderCell.clone();
@@ -150,8 +154,7 @@
         var $tbody = $tableBody.clone();
         //var $saveBtn = $('<input type="submit" value="Save" />').html();
         //var loopEnd = data.length;
-
-        var loopEnd = data.length < 26 ? 26 : data.length +1;
+        var loopEnd = addColumnAllowance(data);
         for (var i = 0; i < loopEnd; i++) {
             var $cell = $tableBodyCell.clone();
             
@@ -171,6 +174,13 @@
         }
 
         return $tbody;
+    }
+
+
+    function addColumnAllowance(data) {
+        var count = Array.isArray(data) === false ? data : data.length;
+        var totalColumns = count < 26 ? 26 : count + 1;
+        return totalColumns; 
     }
 
     function saveExcel() {
