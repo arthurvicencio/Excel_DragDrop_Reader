@@ -71,7 +71,7 @@
         <!-- Start Excel Table Template -->
 
         <div class="tableContainer">
-            <form action="" method="post" id="form">
+            <form action="exportJson.php" method="post" id="form">
                 <table border="1" id="table" class="table table-bordered" hidden>
                     <thead>
                         <tr class="tableHeader">

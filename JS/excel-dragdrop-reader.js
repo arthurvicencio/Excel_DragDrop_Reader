@@ -165,11 +165,10 @@
     }
 
     function exportJson() { 
-        var data = $form.serialize();
-        data  = data.replace(/&/g, '%26');
+        // var data = $form.serialize();
+        // data = data.replace(/&/g, '%26');
 
-        window.location.href = 'exportJson.php?file=' + data;
-
+        $form.submit();
         event.preventDefault();
 
     }

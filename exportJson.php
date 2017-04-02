@@ -7,8 +7,7 @@ header('Cache-Control: must-revalidate');
 header('Pragma: public');
 
 $letters = 65;
-parse_str($_GET['file'], $formData);
-$rowArray = current($formData);
+$rowArray = current($_POST);
 $rowKeys = array();
 
 # Make Keys
@@ -17,7 +16,7 @@ foreach ($rowArray as $row) {
 }
 
 $json = array();
-foreach ($formData as $row) {
+foreach ($_POST as $row) {
     $json[] = array_combine($rowKeys, $row);
 }
 
