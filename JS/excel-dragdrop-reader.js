@@ -1,16 +1,17 @@
 (function(window) {
 
     /* Cache DOM */
-    var $tableHeaderCell = $('.tableHeader').children();
-    var $tableBodyCell   = $('.tableBody').children();
-    var $tableHeader     = $('.tableHeader').html('');
-    var $tableBody       = $('.tableBody').html('');
-    var $tableTemplate   = $('#table').html('');
-    var $tableCellHeaders= genCellHeadersArray('a', 'z');
-    var $form            = $('#form');
-    var $saveButton      = $('#save');
-    var $addColumnButton = $('#addColumn');
-    var $addRowButton    = $('#addRow');
+    var $tableHeaderCell  = $('.tableHeader').children();
+    var $tableBodyCell    = $('.tableBody').children();
+    var $tableHeader      = $('.tableHeader').html('');
+    var $tableBody        = $('.tableBody').html('');
+    var $tableTemplate    = $('#table').html('');
+    var $tableCellHeaders = genCellHeadersArray('a', 'z');
+    var $form             = $('#form');
+    var $saveButton       = $('#save');
+    var $addColumnButton  = $('#addColumn');
+    var $addRowButton     = $('#addRow');
+
 
     function triggerCallback(e, callback) {
         if(!callback || typeof callback !== 'function') {
@@ -81,12 +82,12 @@
     }
 
     function genCellHeadersArray(firstChar, limitChar) {
-    var letters = [], i = firstChar.charCodeAt(0), j = limitChar.charCodeAt(0);
-    for (; i <= j; ++i) {
-        letters.push(String.fromCharCode(i));
+        var letters = [], i = firstChar.charCodeAt(0), j = limitChar.charCodeAt(0);
+        for (; i <= j; ++i) {
+            letters.push(String.fromCharCode(i));
+        }
+        return letters;
     }
-    return letters;
-}
     function columnName(n) {
         var ordA = 'a'.charCodeAt(0);
         var ordZ = 'z'.charCodeAt(0);
@@ -99,6 +100,7 @@
         }
         return s;
     }
+
 
     function writeResponse(response) {
         var responseJson = JSON.parse(response);
@@ -176,6 +178,7 @@
         event.preventDefault();
     }
 
+
     $addColumnButton.on('click', function(){
         var tableHeaderName = columnName(($('tr.tableHeader').first().children().length)-1);
         var rowCount        = ($('.tableBody').length)+1;
@@ -213,11 +216,22 @@
         $table.append($addedRow);
     });
 
+    function exportJson() { 
+        // var data = $form.serialize();
+        // data = data.replace(/&/g, '%26');
+
+        $form.submit();
+        event.preventDefault();
+
+    }
+
+
     window.makeDroppable = makeDroppable;
     window.makeAjax = makeAjax;
     window.writeResponse = writeResponse;
     window.bindEvent = function() {
         $saveButton.click(saveExcel);
+        $exportButton.click(exportJson);
     };
 
 })(this);
@@ -226,9 +240,12 @@
 
     makeDroppable(window.document.querySelector('.droppable-area'), function(files) {
         var reader = new FileReader();
+        var fileName = files[0].name.split('.');
+        var extension = fileName[fileName.length-1];
 
         reader.onload = function(e) {
             var data = 'file=' + e.target.result.match(/,(.*)$/)[1];
+            data = data + '&extension=' + extension;
             makeAjax('readExcel.php', data, writeResponse);
         };
 

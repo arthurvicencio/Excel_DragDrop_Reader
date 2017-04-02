@@ -2,15 +2,22 @@
 
 require_once 'PHP Excel/PHPExcel.php';
 
-$time = time();
-$file = $time . '.xlsx';
+$base64 = base64_decode(str_replace(' ', '+', $_POST['file']));
 
-// $postdata = file_get_contents("php://input");
-file_put_contents($file, base64_decode(str_replace(' ', '+', $_POST['file'])));
-$objPHPExcel = PHPExcel_IOFactory::load($file);
-unlink($file);
+if ($_POST['extension'] === 'json') {
+	$sheetData = json_decode($base64, true);
+} else if (in_array($_POST['extension'], array('xls', 'xlsx'))) {
+	$time = time();
+	$file = $time . $_POST['extension'];
 
-$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+	file_put_contents($file, $base64);
+	$objPHPExcel = PHPExcel_IOFactory::load($file);
+	unlink($file);
+
+	$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+} else {
+	echo 'Error!.';
+}
 
 $letters = array_keys($sheetData[1]);
 $values = array_map('array_values', $sheetData);
