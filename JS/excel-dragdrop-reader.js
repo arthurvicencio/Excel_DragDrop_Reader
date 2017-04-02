@@ -1,10 +1,10 @@
 (function(window) {
 
     /* Cache DOM */
-    var $tableHeaderCell = $('#tableHeader').children();
-    var $tableBodyCell   = $('#tableBody').children();
-    var $tableHeader     = $('#tableHeader').html('');
-    var $tableBody       = $('#tableBody').html('');
+    var $tableHeaderCell = $('.tableHeader').children();
+    var $tableBodyCell   = $('.tableBody').children();
+    var $tableHeader     = $('.tableHeader').html('');
+    var $tableBody       = $('.tableBody').html('');
     var $tableTemplate   = $('#table').html('');
     var $tableCellHeaders = genCellHeadersArray('a', 'z');
     var $form            = $('#form');
@@ -88,10 +88,11 @@
 
     function writeResponse(response) {
         var responseJson = JSON.parse(response);
-        var loopEnd = responseJson.length;
+        //var loopEnd = responseJson.length;
+        var loopEnd = 30;
         $tableTemplate.html('');
         
-        for (var i = 0; i < loopEnd; i++) {
+        for (var i = 0; i <= loopEnd; i++) {
             
             if (i === 0) {
                 var $row = makeHeader(responseJson[i]);
@@ -138,7 +139,14 @@
                 //$cell.find('span').text(index);
                 $tbody.append('<td>'+index+'</td>');
             }
-            $cell.find('input').attr('name', 'cell' + index + '[]').val(data[i]);
+
+            try{
+                $cell.find('input').attr('name', 'cell' + index + '[]').val(data[i]);
+            }
+            catch(e){
+                $cell.find('input').attr('name', 'cell' + index + '[]').val(null);
+            }
+            
             $tbody.append($cell);
         }
 
@@ -184,6 +192,7 @@
                 output.innerHTML += '<img width="200" src="' + URL.createObjectURL(files[i]) + '" />';
             }
             output.innerHTML += '<h4>'+files[i].name+'<h4>';
+            $('div.controlsContainer').css('visibility','visible');
         }
     });
 
