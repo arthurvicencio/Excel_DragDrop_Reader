@@ -1,14 +1,15 @@
 (function(window) {
 
     /* Cache DOM */
-    var $tableHeaderCell = $('#tableHeader').children();
-    var $tableBodyCell   = $('#tableBody').children();
-    var $tableHeader     = $('#tableHeader').html('');
-    var $tableBody       = $('#tableBody').html('');
-    var $tableTemplate   = $('#table').html('');
+    var $tableHeaderCell  = $('#tableHeader').children();
+    var $tableBodyCell    = $('#tableBody').children();
+    var $tableHeader      = $('#tableHeader').html('');
+    var $tableBody        = $('#tableBody').html('');
+    var $tableTemplate    = $('#table').html('');
     var $tableCellHeaders = genCellHeadersArray('a', 'z');
-    var $form            = $('#form');
-    var $saveButton      = $('#save');
+    var $form             = $('#form');
+    var $saveButton       = $('#save');
+    var $exportButton     = $('#export');
 
     function triggerCallback(e, callback) {
         if(!callback || typeof callback !== 'function') {
@@ -79,12 +80,12 @@
     }
 
     function genCellHeadersArray(firstChar, limitChar) {
-    var letters = [], i = firstChar.charCodeAt(0), j = limitChar.charCodeAt(0);
-    for (; i <= j; ++i) {
-        letters.push(String.fromCharCode(i));
+        var letters = [], i = firstChar.charCodeAt(0), j = limitChar.charCodeAt(0);
+        for (; i <= j; ++i) {
+            letters.push(String.fromCharCode(i));
+        }
+        return letters;
     }
-    return letters;
-}
 
     function writeResponse(response) {
         var responseJson = JSON.parse(response);
@@ -155,12 +156,22 @@
         event.preventDefault();
     }
 
+    function exportJson() { 
+        var data = $form.serialize();
+        data  = data.replace(/&/g, '%26');
+
+        window.location.href = 'exportJson.php?file=' + data;
+
+        event.preventDefault();
+
+    }
 
     window.makeDroppable = makeDroppable;
     window.makeAjax = makeAjax;
     window.writeResponse = writeResponse;
     window.bindEvent = function() {
         $saveButton.click(saveExcel);
+        $exportButton.click(exportJson);
     };
 
 })(this);
@@ -169,9 +180,12 @@
 
     makeDroppable(window.document.querySelector('.droppable-area'), function(files) {
         var reader = new FileReader();
+        var fileName = files[0].name.split('.');
+        var extension = fileName[fileName.length-1];
 
         reader.onload = function(e) {
             var data = 'file=' + e.target.result.match(/,(.*)$/)[1];
+            data = data + '&extension=' + extension;
             makeAjax('readExcel.php', data, writeResponse);
         };
 

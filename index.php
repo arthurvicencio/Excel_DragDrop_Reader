@@ -38,6 +38,8 @@
 
         <br />
         <a href="#" id="save"> Save! </a>
+        |
+        <a href="getJson.php" id="export"> Export to JSON! </a>
         
         <!-- Start Excel Table Template -->
 
@@ -55,9 +57,9 @@
                 </table>
             </form>
         </div>
-                        
 
         <!-- End Excel Table Template -->
+
         <!-- Import jquery 3.2 -->
         <script src='JS/jquery.3.2.min.js'></script>
         <!-- Import excel-dragdrop-reader.js  -->
