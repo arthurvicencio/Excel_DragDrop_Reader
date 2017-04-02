@@ -62,6 +62,12 @@
             </div>
         </div>
 
+
+        <br />
+        <a href="#" id="save"> Save! </a>
+        |
+        <a href="getJson.php" id="export"> Export to JSON! </a>
+        
         <!-- Start Excel Table Template -->
 
         <div class="tableContainer">
@@ -84,6 +90,7 @@
         </div>
 
         <!-- End Excel Table Template -->
+
 
         <div class='droppable-area'>
             <p>Drag files here or click to upload</p>
