@@ -6,13 +6,25 @@ header('Expires: 0');
 header('Cache-Control: must-revalidate');
 header('Pragma: public');
 
-$letters = 65;
+function columnName($n) {
+    $ordA = ord('A');
+    $ordZ = ord('Z');
+    $len = $ordZ - $ordA + 1;
+  
+    $s = "";
+    while($n >= 0) {
+        $s = chr($n % $len + $ordA) . $s;
+        $n = floor($n / $len) - 1;
+    }
+    return $s;
+}
+
 $rowArray = current($_POST);
 $rowKeys = array();
 
 # Make Keys
-foreach ($rowArray as $row) {
-    $rowKeys[] = chr($letters++);
+foreach ($rowArray as $index => $row) {
+    $rowKeys[] = columnName($index);
 }
 
 $json = array();

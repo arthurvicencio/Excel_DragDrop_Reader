@@ -6,9 +6,10 @@
     var $tableHeader      = $('.tableHeader').html('');
     var $tableBody        = $('.tableBody').html('');
     var $tableTemplate    = $('#table').html('');
-    var $tableCellHeaders = genCellHeadersArray('a', 'z');
+    // var data = genCellHeadersArray('a', 'z');
     var $form             = $('#form');
     var $saveButton       = $('#save');
+    var $exportJson       = $('#export');
     var $addColumnButton  = $('#addColumn');
     var $addRowButton     = $('#addRow');
 
@@ -81,13 +82,14 @@
         });
     }
 
-    function genCellHeadersArray(firstChar, limitChar) {
-        var letters = [], i = firstChar.charCodeAt(0), j = limitChar.charCodeAt(0);
-        for (; i <= j; ++i) {
-            letters.push(String.fromCharCode(i));
-        }
-        return letters;
-    }
+    // function genCellHeadersArray(firstChar, limitChar) {
+    //     var letters = [], i = firstChar.charCodeAt(0), j = limitChar.charCodeAt(0);
+    //     for (; i <= j; ++i) {
+    //         letters.push(String.fromCharCode(i));
+    //     }
+    //     return letters;
+    // }
+
     function columnName(n) {
         var ordA = 'a'.charCodeAt(0);
         var ordZ = 'z'.charCodeAt(0);
@@ -125,18 +127,19 @@
     function makeHeader(data) {
         var $theader = $tableHeader.clone();
         //var loopEnd = data.length;
-        for (var i = 0; i < $tableCellHeaders.length; i++) {
+        var loopEnd = data.length < 26 ? 26 : data.length +1;
+        for (var i = 0; i < loopEnd; i++) {
             if(i == 0){
                 var $cell = $tableHeaderCell.clone();
                 $cell.html('&nbsp;');
                 $theader.append($cell);
-                console.log(data[i]);
+                // console.log(data[i]);
             }
 
             var $cell = $tableHeaderCell.clone();
             $cell.html(columnName(i).toUpperCase());
             $theader.append($cell);
-            console.log(data[i]);
+            // console.log(data[i]);
         }
 
         return $theader;
@@ -147,7 +150,9 @@
         var $tbody = $tableBody.clone();
         //var $saveBtn = $('<input type="submit" value="Save" />').html();
         //var loopEnd = data.length;
-        for (var i = 0; i < $tableCellHeaders.length; i++) {
+
+        var loopEnd = data.length < 26 ? 26 : data.length +1;
+        for (var i = 0; i < loopEnd; i++) {
             var $cell = $tableBodyCell.clone();
             
             if(i == 0){
@@ -217,8 +222,6 @@
     });
 
     function exportJson() { 
-        // var data = $form.serialize();
-        // data = data.replace(/&/g, '%26');
 
         $form.submit();
         event.preventDefault();
@@ -231,7 +234,7 @@
     window.writeResponse = writeResponse;
     window.bindEvent = function() {
         $saveButton.click(saveExcel);
-        $exportButton.click(exportJson);
+        $exportJson.click(exportJson);
     };
 
 })(this);
