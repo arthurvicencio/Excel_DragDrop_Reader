@@ -6,9 +6,11 @@
     var $tableHeader     = $('.tableHeader').html('');
     var $tableBody       = $('.tableBody').html('');
     var $tableTemplate   = $('#table').html('');
-    var $tableCellHeaders = genCellHeadersArray('a', 'z');
+    var $tableCellHeaders= genCellHeadersArray('a', 'z');
     var $form            = $('#form');
     var $saveButton      = $('#save');
+    var $addColumnButton = $('#addColumn');
+    var $addRowButton    = $('#addRow');
 
     function triggerCallback(e, callback) {
         if(!callback || typeof callback !== 'function') {
@@ -85,6 +87,18 @@
     }
     return letters;
 }
+    function columnName(n) {
+        var ordA = 'a'.charCodeAt(0);
+        var ordZ = 'z'.charCodeAt(0);
+        var len = ordZ - ordA + 1;
+      
+        var s = "";
+        while(n >= 0) {
+            s = String.fromCharCode(n % len + ordA) + s;
+            n = Math.floor(n / len) - 1;
+        }
+        return s;
+    }
 
     function writeResponse(response) {
         var responseJson = JSON.parse(response);
@@ -106,7 +120,6 @@
         $tableTemplate.show();
     }
 
-
     function makeHeader(data) {
         var $theader = $tableHeader.clone();
         //var loopEnd = data.length;
@@ -119,7 +132,7 @@
             }
 
             var $cell = $tableHeaderCell.clone();
-            $cell.html($tableCellHeaders[i].toUpperCase());
+            $cell.html(columnName(i).toUpperCase());
             $theader.append($cell);
             console.log(data[i]);
         }
@@ -163,6 +176,42 @@
         event.preventDefault();
     }
 
+    $addColumnButton.on('click', function(){
+        var tableHeaderName = columnName(($('tr.tableHeader').first().children().length)-1);
+        var rowCount        = ($('.tableBody').length)+1;
+        var $table          = $('#table');
+        var $tableHeaders   = $('tr.tableHeader');
+        var $tableRows      = $('tr.tableBody');
+        var $addedRow       = $tableBodyCell.clone();
+
+        $tableHeaders.append('<th>'+tableHeaderName.toUpperCase()+'</th>');
+
+        for(var i = 0; i < $tableRows.children().length; i++){
+            var $tableRow = $tableRows[i];
+            var $cell     = "<td><input type='text' name='cell"+(i+1)+"[]' /></td>";
+
+            $($cell).appendTo($tableRow);
+        }
+
+        //$tableRows.append($addedRow);
+    });
+
+    $addRowButton.on('click', function(){
+        var $table        = $('#table');
+        var $tableRows    = $('tr.tableBody');
+        var $tableColumns = $('tr.tableHeader');
+        var $rowTemplate  = $tableBodyCell.clone();
+        var $addedRow     = "<tr class='tableBody'>";
+
+        for(var i = 0; i < $tableColumns.children().length; i++){
+            if(i == 0) $addedRow = $addedRow + "<td>"+($tableRows.length+1)+"</td>";
+            else $addedRow = $addedRow + "<td><input type='text' name='cell"+($tableRows.length+1)+"[]' /></td>";
+        }
+
+        $addedRow = $addedRow + "</tr>";
+
+        $table.append($addedRow);
+    });
 
     window.makeDroppable = makeDroppable;
     window.makeAjax = makeAjax;

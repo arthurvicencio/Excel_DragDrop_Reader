@@ -59,6 +59,8 @@
             <div class="output"></div>
             <div class="controlsContainer">
                 <button id="save" class="btn btn-default"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+                <button id="addColumn" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Add Column</button>
+                <button id="addRow" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Add Row</button>
             </div>
         </div>
 
