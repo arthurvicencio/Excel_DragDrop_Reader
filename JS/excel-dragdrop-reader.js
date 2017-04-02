@@ -107,7 +107,7 @@
     function writeResponse(response) {
         var responseJson = JSON.parse(response);
         //var loopEnd = responseJson.length;
-        var loopEnd = responseJson.length < 30 ? 30 : responseJson.length+1; 
+        var loopEnd = responseJson.length < 30 ? 30 : responseJson.length; 
         var colCount = responseJson[0].length;
         $tableTemplate.html('');
 
@@ -115,7 +115,7 @@
         console.log(responseJson.length);
         
         for (var i = 0; i <= loopEnd; i++) {
-            var currentRsponse = typeof responseJson[i] !== 'undefined' ? responseJson[i] : colCount + 1;
+            var currentRsponse = typeof responseJson[i] !== 'undefined' ? responseJson[i] : colCount;
             if (i === 0) {
                 var $row = makeHeader(currentRsponse);
             } else {

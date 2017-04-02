@@ -1,7 +1,7 @@
 <?php
 
 header('Content-Description: File Transfer');
-header('Content-Disposition: attachment; filename="test.json"');
+header('Content-Disposition: attachment; filename="JSON.json"');
 header('Expires: 0');
 header('Cache-Control: must-revalidate');
 header('Pragma: public');

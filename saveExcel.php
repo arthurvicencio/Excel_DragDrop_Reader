@@ -3,7 +3,7 @@
 require_once 'PHP Excel/PHPExcel.php';
 
 $time = time();
-$file = $time . '.xlsx';
+$file = 'Excel_' . $time . '.xlsx';
 
 $objPHPExcel = new PHPExcel();
 $dataArray = array_values($_POST);
