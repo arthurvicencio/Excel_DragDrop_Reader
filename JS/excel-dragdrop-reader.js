@@ -107,7 +107,7 @@
     function writeResponse(response) {
         var responseJson = JSON.parse(response);
         //var loopEnd = responseJson.length;
-        var loopEnd = 30;
+        var loopEnd = responseJson.length < 30 ? 30 : responseJson.length; 
         $tableTemplate.html('');
         
         for (var i = 0; i <= loopEnd; i++) {
